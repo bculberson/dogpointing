@@ -89,7 +89,7 @@ class Story extends Component {
         voteValue: '',
       });
     }).catch((error) => {
-      alert(`error: ${error}`);
+      console.error(`error: ${error}`);
     });
   }
 
@@ -117,7 +117,7 @@ class Story extends Component {
         latestStory: data,
       });
     }).catch((error) => {
-      alert(`error: ${error}`);
+      console.error(`error: ${error}`);
     });
   }
 

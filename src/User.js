@@ -35,7 +35,7 @@ class User extends Component {
   handleNameSubmit(e) {
     e.preventDefault();
     if (this.state.name.length === 0) {
-      alert(`Invalid Name: ${this.state.name}`);
+      console.error(`Invalid Name: ${this.state.name}`);
     } else {
       const cUI = {
         method: 'POST',
@@ -54,7 +54,7 @@ class User extends Component {
           showName: false,
         });
       }).catch((error) => {
-        alert(`error: ${error}`);
+        console.error(`error: ${error}`);
       });
     }
   }
