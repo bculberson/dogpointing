@@ -17,9 +17,15 @@ class App extends Component {
       observer: true,
     };
 
+
     this.handleSessionChange = this.handleSessionChange.bind(this);
     this.handleSessionJoin = this.handleSessionJoin.bind(this);
     this.createSession = this.createSession.bind(this);
+
+    if (this.props.location.pathname.startsWith('/session/')) {
+      this.state.sessionKey = this.props.location.pathname.slice(9);
+      this.state.showJoin = false;
+    }
   }
 
   handleSessionChange(e) {
@@ -97,7 +103,7 @@ class App extends Component {
           </form>
         </span>
         <span className="App-intro" style={{ display: (!this.state.showJoin ? 'inline-block' : 'none') }}>
-          <b>Session: {this.state.sessionKey}</b>
+          <b>Session: <a href={`/#/session/${this.state.sessionKey}`}>{this.state.sessionKey}</a></b>
           <User onChange={(key, name, observer) => { this.showStoriesFor(key, name, observer); }} sessionKey={this.state.sessionKey} />
         </span>
         <div className="App-intro" style={{ display: (this.state.userName !== '' ? 'block' : 'none') }}>
