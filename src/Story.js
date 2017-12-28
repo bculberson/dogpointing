@@ -1,6 +1,7 @@
 import React, {
   Component,
 } from 'react';
+import './Story.css';
 import PropTypes from 'prop-types';
 
 class Story extends Component {
@@ -155,6 +156,7 @@ class Story extends Component {
           <input
             type="Submit"
             value="New Story"
+            readOnly="true"
           />
         </form>
         {this.state.latestStory != null && this.state.latestStory.votes != null &&
@@ -175,15 +177,19 @@ class Story extends Component {
               </tbody>
             </table>
             <form onSubmit={this.handleVoteSubmit}>
-              <select defaultValue={this.state.voteValue} onChange={this.handleVoteChange} style={{ display: (this.props.observer ? 'none' : 'inline-block') }}>
-                <option value="">How Big?</option>
-                <option value="Chihuahua">Chihuahua</option>
-                <option value="Corgi">Corgi</option>
-                <option value="Pitbull">Pitbull</option>
-                <option value="Labrador">Labrador</option>
-                <option value="Great Dane">Great Dane</option>
-              </select>
-              <input type="Submit" value="Vote" />
+              <div className="dog-selector">
+                <input id="Chihuahua" type="radio" name="dogs" value="Chihuahua" checked={this.state.voteValue === 'Chihuahua'} onChange={this.handleVoteChange} />
+                <label className="house-dog Chihuahua" htmlFor="Chihuahua" />
+                <input id="Corgi" type="radio" name="dogs" value="Corgi" checked={this.state.voteValue === 'Corgi'} onChange={this.handleVoteChange} />
+                <label className="house-dog Corgi"htmlFor="Corgi" />
+                <input id="Pitbull" type="radio" name="dogs" value="Pitbull" checked={this.state.voteValue === 'Pitbull'} onChange={this.handleVoteChange} />
+                <label className="house-dog Pitbull"htmlFor="Pitbull" />
+                <input id="Labrador" type="radio" name="dogs" value="Labrador" checked={this.state.voteValue === 'Labrador'} onChange={this.handleVoteChange} />
+                <label className="house-dog Labrador"htmlFor="Labrador" />
+                <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'GreatDane'} onChange={this.handleVoteChange} />
+                <label className="house-dog GreatDane" htmlFor="GreatDane" />
+              </div>
+              <input type="Submit" value="Vote" readOnly="true" />
             </form>
           </div>
         }

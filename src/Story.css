@@ -1,0 +1,36 @@
+.dog-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+.Chihuahua{background-image:url(./images/Chihuahua.jpg);}
+.Corgi{background-image:url(./images/Corgi.jpg);}
+.Pitbull{background-image:url(./images/Pitbull.jpg);}
+.Labrador{background-image:url(./images/Labrador.jpg);}
+.GreatDane{background-image:url(./images/GreatDane.jpg);}
+
+.dog-selector input:active +.house-dog{opacity: .5;}
+.dog-selector input:checked +.house-dog{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.house-dog{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:230px;height:153px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1) grayscale(1) opacity(.7);
+            filter: brightness(1) grayscale(1) opacity(.7);
+}
+.house-dog:hover{
+    -webkit-filter: brightness(1) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1) grayscale(.5) opacity(.9);
+            filter: brightness(1) grayscale(.5) opacity(.9);
+}

@@ -78,7 +78,7 @@ class User extends Component {
           &nbsp;Observe?&nbsp;
             <input type="checkbox" value={this.state.observer} onChange={this.handleObserverChange} />
             <br />
-            <input type="Submit" value="Submit" />
+            <input type="Submit" value="Submit" readOnly="true" />
           </form>
         </div>
         <span className="App-intro" style={{ display: (!this.state.showName ? 'inline-block' : 'none') }}>

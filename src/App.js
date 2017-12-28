@@ -81,7 +81,7 @@ class App extends Component {
 
         <span className="App-intro" style={{ display: (this.state.showJoin ? 'inline-block' : 'none') }}>
           <form onSubmit={this.createSession}>
-            <input type="Submit" value="Squirrel" />
+            <input type="Submit" value="Squirrel" readOnly="true" />
           </form>
           <form onSubmit={this.handleSessionJoin}>
             <input
@@ -93,7 +93,7 @@ class App extends Component {
               onChange={
         this.handleSessionChange
       }
-            /> <input type="Submit" value="Join Hunt" />
+            /> <input type="Submit" value="Join Hunt" readOnly="true" />
           </form>
         </span>
         <span className="App-intro" style={{ display: (!this.state.showJoin ? 'inline-block' : 'none') }}>
