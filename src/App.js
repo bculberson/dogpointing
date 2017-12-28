@@ -31,7 +31,7 @@ class App extends Component {
   handleSessionJoin(e) {
     e.preventDefault();
     if (this.state.sessionKey.length !== 5) {
-      alert(`Invalid Session: ${this.state.sessionKey}`);
+      console.error(`Invalid Session: ${this.state.sessionKey}`);
     } else {
       this.setState({
         showJoin: false,
@@ -67,7 +67,7 @@ class App extends Component {
         showJoin: false,
       });
     }).catch((error) => {
-      alert(`error: ${error}`);
+      console.error(`error: ${error}`);
     });
   }
 
