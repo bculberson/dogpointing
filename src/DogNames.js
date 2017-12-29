@@ -1,7 +1,11 @@
 export default [
   'Colby',
   'Mitzy',
+  'Coco',
+  'Sandy',
   'Sport',
+  'Nikki',
+  'Rebecca',
 
   'Bella',
   'Lucy',
