@@ -27,17 +27,11 @@ class Story extends Component {
     this.lastInteraction = new Date();
     this.mqttClient = null;
 
-    setTimeout(() => {
-      this.initWs();
-    }, 100);
+    this.initWs();
   }
 
   initWs(e) {
-    // delay until needed
     if (this.props.sessionKey === '') {
-      setTimeout(() => {
-        this.initWs();
-      }, 100);
       return;
     }
 

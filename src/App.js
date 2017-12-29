@@ -17,7 +17,7 @@ class App extends Component {
       observer: true,
     };
 
-
+    this.story = null;
     this.handleSessionChange = this.handleSessionChange.bind(this);
     this.handleSessionJoin = this.handleSessionJoin.bind(this);
     this.createSession = this.createSession.bind(this);
@@ -36,6 +36,7 @@ class App extends Component {
 
   handleSessionJoin(e) {
     e.preventDefault();
+
     if (this.state.sessionKey.length !== 5) {
       console.error(`Invalid Session: ${this.state.sessionKey}`);
     } else {
@@ -72,6 +73,7 @@ class App extends Component {
         sessionKey: data.key,
         showJoin: false,
       });
+      this.story.initWs();
     }).catch((error) => {
       console.error(`error: ${error}`);
     });
@@ -107,7 +109,7 @@ class App extends Component {
           <User onChange={(key, name, observer) => { this.showStoriesFor(key, name, observer); }} sessionKey={this.state.sessionKey} />
         </span>
         <div className="App-intro" style={{ display: (this.state.userName !== '' ? 'block' : 'none') }}>
-          <Story sessionKey={this.state.sessionKey} userKey={this.state.userKey} observer={this.state.observer} />
+          <Story id="story" sessionKey={this.state.sessionKey} userKey={this.state.userKey} observer={this.state.observer} ref={ref => this.story = ref} />
         </div>
       </div>
     );
