@@ -88,13 +88,12 @@ def lambda_handler(event, context):
       response = table.update_item(
         Key={'story_key': str(story_key), 'session_key': session_key},
         UpdateExpression="set votes = :votes, expiration = :expiration, complete = :complete",
-        ConditionExpression='closed = :exp_closed and complete = :exp_complete and expiration = :exp_expiration',
+        ConditionExpression='complete = :exp_complete and expiration = :exp_expiration',
         ExpressionAttributeValues={
           ':votes': votes_sorted,
           ':expiration': int(expiration),
           ':complete': complete,
           ':exp_expiration': old_expiration,
-          ':exp_closed': False,
           ':exp_complete': False,
         },
         ReturnValues="UPDATED_NEW"
@@ -110,7 +109,6 @@ def lambda_handler(event, context):
         'expiration': int(expiration),
         'name': response['Item']['name'],
         'votes': response['Item']['votes'],
-        'closed': False,
         'complete': complete,
         }
     topic = "dp/%s" % str(session_key)
