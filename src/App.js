@@ -89,7 +89,7 @@ class App extends Component {
           <form onSubmit={this.createSession}>
             <input type="Submit" value="Squirrel" readOnly="true" />
           </form>
-          <form onSubmit={this.handleSessionJoin}>
+          <form onSubmit={this.handleSessionJoin} style={{ display: 'none' }}>
             <input
               type="text"
               value={
