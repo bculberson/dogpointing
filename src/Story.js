@@ -50,10 +50,10 @@ class Story extends Component {
       cache: 'default',
     };
 
-    const gSR = new Request(`https://api.dogpointing.com/session/${this.props.sessionKey}/story`, gSI);
+    const gSR = new Request(`https://api.dogpointing.com/session/${this.props.sessionKey}/story?latest=true`, gSI);
     fetch(gSR, gSI).then(resp => resp.json()).then((data) => {
       if (data.length > 0) {
-        const latestStory = data[data.length - 1];
+        const latestStory = data[0];
         if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
           this.setState({ voteValue: '' });
         }

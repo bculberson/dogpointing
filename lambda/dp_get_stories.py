@@ -13,5 +13,8 @@ def lambda_handler(event, context):
     response = table.query(
       KeyConditionExpression=Key('session_key').eq(session_key)
     )
-    
-    return response["Items"]
+
+    if event['latest'] != "" and len(response["Items"]) > 0:
+        return [response["Items"][-1],]
+    else:
+        return response["Items"]
