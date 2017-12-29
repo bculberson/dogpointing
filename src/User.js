@@ -26,7 +26,6 @@ class User extends Component {
   }
 
   handleObserverChange(e) {
-    console.log(e.target.checked);
     this.setState({
       observer: e.target.checked,
     });

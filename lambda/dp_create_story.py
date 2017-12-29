@@ -2,6 +2,7 @@ import logging
 import boto3
 import time
 import random
+import json
 from datetime import datetime
 from datetime import timedelta
 from boto3.dynamodb.conditions import Key, Attr
@@ -12,6 +13,8 @@ dynamodb = boto3.resource("dynamodb", region_name='us-east-2', endpoint_url="htt
 story_table = dynamodb.Table('dp_stories')
 session_table = dynamodb.Table('dp_sessions')
 user_table = dynamodb.Table('dp_users')
+iot_client = boto3.client('iot-data', region_name='us-east-2')
+
 
 def get_user_info(session_key):
   users = {}
@@ -22,6 +25,7 @@ def get_user_info(session_key):
     if item['observer'] == False:
       users[item['user_key']] = item['name']
   return users
+
 
 def lambda_handler(event, context):
     logger.debug('got event{}'.format(event))
@@ -72,4 +76,10 @@ def lambda_handler(event, context):
     story_table.put_item(Item=item)
 
     response = story_table.get_item(Key={'story_key': str(story_key), 'session_key': session_key})
+    # publish story
+    topic = "dp/%s" % str(session_key)
+    iot_client.publish(
+            topic=topic,
+            qos=1,
+            payload=json.dumps(item))
     return response['Item']

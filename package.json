@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "aws-mqtt": "^0.2.2",
+    "aws-mqtt-client": "0.0.5",
+    "aws-sdk": "^2.175.0",
+    "mqtt": "^2.15.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",

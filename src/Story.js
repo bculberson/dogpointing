@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import './Story.css';
 import PropTypes from 'prop-types';
+import AWSMqtt from 'aws-mqtt';
+import AWS from 'aws-sdk';
 
 class Story extends Component {
   constructor(props) {
@@ -20,27 +22,59 @@ class Story extends Component {
     this.handleVoteSubmit = this.handleVoteSubmit.bind(this);
     this.createStory = this.createStory.bind(this);
     this.getLatestStory = this.getLatestStory.bind(this);
+    this.initWs = this.initWs.bind(this);
     this.showVoteValue = this.showVoteValue.bind(this);
     this.lastInteraction = new Date();
+    this.mqttClient = null;
 
     setTimeout(() => {
-      this.getLatestStory();
-    }, 1000);
+      this.initWs();
+    }, 100);
   }
 
-  getLatestStory(e) {
-    const diff = Math.abs(new Date() - this.lastInteraction);
-    // knock out after 15 min of inactivity
-    if (diff > 1000 * 60 * 15) {
-      window.location('/');
-    }
+  initWs(e) {
     // delay until needed
-    if (this.props.sessionKey === '' || !document.hasFocus()) {
+    if (this.props.sessionKey === '') {
       setTimeout(() => {
-        this.getLatestStory();
-      }, 1000);
+        this.initWs();
+      }, 100);
       return;
     }
+
+    // get latest story
+    this.getLatestStory();
+
+    // subscribe to all story updates
+    const credentials = new AWS.CognitoIdentityCredentials({ IdentityPoolId: 'us-east-2:71910967-8a76-4636-b3c5-0ea6bbf1b19d' }, { region: 'us-east-2' });
+    const endpoint = 'aqqaj5ktpns1h.iot.us-east-2.amazonaws.com';
+    const region = 'us-east-2';
+    const topic = `dp/${this.props.sessionKey}`;
+
+    if (this.mqttClient == null) {
+      this.mqttClient = new AWSMqtt.connect({
+        WebSocket: window.WebSocket,
+        credentials,
+        endpoint,
+        region,
+        clientId: `mqtt-client-${Math.floor((Math.random() * 100000) + 1)}`,
+      });
+
+      this.mqttClient.on('connect', () => {
+        this.mqttClient.subscribe(topic);
+      });
+
+      this.mqttClient.on('message', (topic, message) => {
+        const latestStory = JSON.parse(message.toString());
+        if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
+          this.setState({ voteValue: '', latestStory, initialized: true });
+        } else {
+          this.setState({ latestStory, initialized: true });
+        }
+      });
+    }
+  }
+
+  getLatestStory() {
     const gSI = {
       method: 'GET',
       headers: {
@@ -55,18 +89,16 @@ class Story extends Component {
       if (data.length > 0) {
         const latestStory = data[0];
         if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
-          this.setState({ voteValue: '' });
+          this.setState({ voteValue: '', latestStory, initialized: true });
+        } else {
+          this.setState({ latestStory, initialized: true });
         }
-        this.setState({ latestStory, initialized: true });
       } else {
         this.setState({ initialized: true });
       }
     }).catch((error) => {
-      console.log(`error: ${error}`);
+      console.error(`error: ${error}`);
     });
-    setTimeout(() => {
-      this.getLatestStory();
-    }, 1000);
   }
 
   createStory(e) {
@@ -87,6 +119,7 @@ class Story extends Component {
       this.setState({
         latestStory: data,
         voteValue: '',
+        initialized: true,
       });
     }).catch((error) => {
       console.error(`error: ${error}`);
@@ -115,6 +148,7 @@ class Story extends Component {
     fetch(vR, vI).then(resp => resp.json()).then((data) => {
       this.setState({
         latestStory: data,
+        initialized: true,
       });
     }).catch((error) => {
       console.error(`error: ${error}`);
@@ -141,7 +175,7 @@ class Story extends Component {
 
   render() {
     return (
-      <div className="App" style={{ display: (this.state.initialized ? 'inline-block' : 'none') }}>
+      <div className="App">
         <form onSubmit={this.createStory}>
           <input
             type="text"
