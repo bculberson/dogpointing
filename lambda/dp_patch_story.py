@@ -74,7 +74,7 @@ def lambda_handler(event, context):
     # is it complete?
     complete = True
     for vote in votes.values():
-      if vote["value"] == "cat":
+      if vote["value"] == "Cat":
         complete = False
         break
 
