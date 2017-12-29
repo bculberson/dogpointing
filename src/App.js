@@ -103,7 +103,7 @@ class App extends Component {
           </form>
         </span>
         <span className="App-intro" style={{ display: (!this.state.showJoin ? 'inline-block' : 'none') }}>
-          <b>Session: <a href={`/#/session/${this.state.sessionKey}`}>{this.state.sessionKey}</a></b>
+          <b>Session: <a href={`/session/${this.state.sessionKey}`}>{this.state.sessionKey}</a></b>
           <User onChange={(key, name, observer) => { this.showStoriesFor(key, name, observer); }} sessionKey={this.state.sessionKey} />
         </span>
         <div className="App-intro" style={{ display: (this.state.userName !== '' ? 'block' : 'none') }}>
