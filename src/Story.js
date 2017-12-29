@@ -15,6 +15,7 @@ class Story extends Component {
       latestStory: null,
       voteValue: '',
       initialized: false,
+      voteDisabled: false,
     };
 
     this.handleStoryNameChange = this.handleStoryNameChange.bind(this);
@@ -61,7 +62,7 @@ class Story extends Component {
         const latestStory = JSON.parse(message.toString());
         if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
           this.setState({ voteValue: '', latestStory, initialized: true });
-        } else {
+        } else if (parseInt(latestStory.story_key, 10) >= parseInt(this.state.latestStory.story_key, 10)) {
           this.setState({ latestStory, initialized: true });
         }
       });
@@ -82,11 +83,7 @@ class Story extends Component {
     fetch(gSR, gSI).then(resp => resp.json()).then((data) => {
       if (data.length > 0) {
         const latestStory = data[0];
-        if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
-          this.setState({ voteValue: '', latestStory, initialized: true });
-        } else {
-          this.setState({ latestStory, initialized: true });
-        }
+        this.setState({ voteValue: '', latestStory, initialized: true });
       } else {
         this.setState({ initialized: true });
       }
@@ -110,11 +107,14 @@ class Story extends Component {
 
     const cSR = new Request(`https://api.dogpointing.com/session/${this.props.sessionKey}/story`, cSI);
     fetch(cSR, cSI).then(resp => resp.json()).then((data) => {
-      this.setState({
-        latestStory: data,
-        voteValue: '',
-        initialized: true,
-      });
+      if (parseInt(data.story_key, 10) >= parseInt(this.state.latestStory.story_key, 10)) {
+        this.setState({
+          latestStory: data,
+          voteValue: '',
+          initialized: true,
+          voteDisabled: data.complete,
+        });
+      }
     }).catch((error) => {
       console.error(`error: ${error}`);
     });
@@ -143,6 +143,7 @@ class Story extends Component {
       this.setState({
         latestStory: data,
         initialized: true,
+        voteDisabled: data.complete,
       });
     }).catch((error) => {
       console.error(`error: ${error}`);
@@ -217,7 +218,7 @@ class Story extends Component {
                 <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'Great Dane'} onChange={this.handleVoteChange} />
                 <label className="house-dog GreatDane" htmlFor="GreatDane" />
               </div>
-              <input type="Submit" value="Vote" readOnly="true" />
+              <input type="Submit" value="Vote" readOnly="true" disabled={this.state.voteDisabled} />
             </form>
           </div>
         }

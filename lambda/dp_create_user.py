@@ -11,15 +11,6 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 dynamodb = boto3.resource("dynamodb", region_name='us-east-2', endpoint_url="http://dynamodb.us-east-2.amazonaws.com")
 table = dynamodb.Table('dp_users')
-story_table = dynamodb.Table('dp_stories')
-
-
-def get_stories(session_key):
-  users = {}
-  response = story_table.query(
-      KeyConditionExpression=Key('session_key').eq(session_key)
-  )
-  return response['Items']
 
 
 def lambda_handler(event, context):
@@ -36,27 +27,5 @@ def lambda_handler(event, context):
         }
 
     table.put_item(Item=item)
-
     user_response = table.get_item(Key={'user_key': user_key, 'session_key': session_key})
-
-    # add user votes to stories
-    if event['user']['observer'] == False:
-        for story in get_stories(session_key):
-            votes = story["votes"]
-            votes.append({"key": user_key, "name": event['user']['name'], "value": "Cat"})
-            try:
-              response = story_table.update_item(
-                Key={'story_key': story['story_key'], 'session_key': session_key},
-                UpdateExpression="set votes = :votes, expiration = :expiration",
-                ConditionExpression='expiration = :exp_expiration',
-                ExpressionAttributeValues={
-                  ':votes': votes,
-                  ':expiration': int(expiration),
-                  ':exp_expiration': story["expiration"],
-                },
-                ReturnValues="UPDATED_NEW"
-              )
-            except botocore.exceptions.ClientError as e:
-              raise Exception("Error updating dynamo")
-
     return user_response['Item']
