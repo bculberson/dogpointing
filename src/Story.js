@@ -186,7 +186,7 @@ class Story extends Component {
                 <label className="house-dog Pitbull"htmlFor="Pitbull" />
                 <input id="Labrador" type="radio" name="dogs" value="Labrador" checked={this.state.voteValue === 'Labrador'} onChange={this.handleVoteChange} />
                 <label className="house-dog Labrador"htmlFor="Labrador" />
-                <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'GreatDane'} onChange={this.handleVoteChange} />
+                <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'Great Dane'} onChange={this.handleVoteChange} />
                 <label className="house-dog GreatDane" htmlFor="GreatDane" />
               </div>
               <input type="Submit" value="Vote" readOnly="true" />
