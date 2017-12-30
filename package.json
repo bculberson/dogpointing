@@ -9,10 +9,8 @@
     "mqtt": "^2.15.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17",
-    "redux": "^3.7.2"
+    "react-scripts": "1.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,7 +26,6 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
     "esprima-fb": "^15001.1001.0-dev-harmony-fb",
-    "jscs": "^3.0.7",
-    "redux-devtools": "^3.4.1"
+    "jscs": "^3.0.7"
   }
 }

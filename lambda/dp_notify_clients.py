@@ -13,16 +13,17 @@ def lambda_handler(event, context):
     for record in event['Records']:
         votes = []
         for vote in record['dynamodb']['NewImage']['votes']['L']:
-            votes.append({"value": vote['M']['value']['S'], "name": vote['M']['name']['S'], "key": vote['M']['key']['S']})
+            votes.append({"value": vote['M']['value']['S'], "name": vote['M']
+                          ['name']['S'], "key": vote['M']['key']['S']})
         session_key = record['dynamodb']['Keys']['session_key']['S']
-        item={
+        item = {
             'story_key': record['dynamodb']['Keys']['story_key']['S'],
             'session_key': session_key,
             'expiration': record['dynamodb']['NewImage']['expiration']['N'],
             'name': record['dynamodb']['NewImage']['name']['S'],
             'votes': votes,
             'complete': record['dynamodb']['NewImage']['complete']['BOOL'],
-            }
+        }
         logger.debug(item)
         topic = "dp/%s" % session_key
         iot_client.publish(

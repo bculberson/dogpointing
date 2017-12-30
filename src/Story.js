@@ -61,9 +61,11 @@ class Story extends Component {
       this.mqttClient.on('message', (topic, message) => {
         const latestStory = JSON.parse(message.toString());
         if (this.state.latestStory == null || this.state.latestStory.story_key !== latestStory.story_key) {
-          this.setState({ voteValue: '', latestStory, initialized: true });
+          this.setState({
+            voteValue: '', latestStory, initialized: true, voteDisabled: latestStory.complete,
+          });
         } else if (parseInt(latestStory.story_key, 10) >= parseInt(this.state.latestStory.story_key, 10)) {
-          this.setState({ latestStory, initialized: true });
+          this.setState({ latestStory, initialized: true, voteDisabled: latestStory.complete });
         }
       });
     }
@@ -83,9 +85,11 @@ class Story extends Component {
     fetch(gSR, gSI).then(resp => resp.json()).then((data) => {
       if (data.length > 0) {
         const latestStory = data[0];
-        this.setState({ voteValue: '', latestStory, initialized: true });
+        this.setState({
+          voteValue: '', latestStory, initialized: true, voteDisabled: latestStory.complete,
+        });
       } else {
-        this.setState({ initialized: true });
+        this.setState({ initialized: true, voteDisabled: false });
       }
     }).catch((error) => {
       console.error(`error: ${error}`);
@@ -200,22 +204,22 @@ class Story extends Component {
               <tbody>
                 {this.state.latestStory.votes.map(vote =>
             (<tr key={vote.key}>
-              <td>{vote.name}</td>
-              <td>{this.showVoteValue(vote)}</td>
+              <td style={{ textAlign: 'left', width: '100px' }}>{vote.name}</td>
+              <td style={{ textAlign: 'left', width: '100px' }}>{this.showVoteValue(vote)}</td>
             </tr>))}
               </tbody>
             </table>
             <form onSubmit={this.handleVoteSubmit}>
               <div className="dog-selector">
-                <input id="Chihuahua" type="radio" name="dogs" value="Chihuahua" checked={this.state.voteValue === 'Chihuahua'} onChange={this.handleVoteChange} />
+                <input id="Chihuahua" type="radio" name="dogs" value="Chihuahua" checked={this.state.voteValue === 'Chihuahua'} onChange={this.handleVoteChange} disabled={this.state.voteDisabled} />
                 <label className="house-dog Chihuahua" htmlFor="Chihuahua" />
-                <input id="Corgi" type="radio" name="dogs" value="Corgi" checked={this.state.voteValue === 'Corgi'} onChange={this.handleVoteChange} />
+                <input id="Corgi" type="radio" name="dogs" value="Corgi" checked={this.state.voteValue === 'Corgi'} onChange={this.handleVoteChange} disabled={this.state.voteDisabled} />
                 <label className="house-dog Corgi"htmlFor="Corgi" />
-                <input id="Pitbull" type="radio" name="dogs" value="Pitbull" checked={this.state.voteValue === 'Pitbull'} onChange={this.handleVoteChange} />
+                <input id="Pitbull" type="radio" name="dogs" value="Pitbull" checked={this.state.voteValue === 'Pitbull'} onChange={this.handleVoteChange} disabled={this.state.voteDisabled} />
                 <label className="house-dog Pitbull"htmlFor="Pitbull" />
-                <input id="Labrador" type="radio" name="dogs" value="Labrador" checked={this.state.voteValue === 'Labrador'} onChange={this.handleVoteChange} />
+                <input id="Labrador" type="radio" name="dogs" value="Labrador" checked={this.state.voteValue === 'Labrador'} onChange={this.handleVoteChange} disabled={this.state.voteDisabled} />
                 <label className="house-dog Labrador"htmlFor="Labrador" />
-                <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'Great Dane'} onChange={this.handleVoteChange} />
+                <input id="GreatDane" type="radio" name="dogs" value="Great Dane" checked={this.state.voteValue === 'Great Dane'} onChange={this.handleVoteChange} disabled={this.state.voteDisabled} />
                 <label className="house-dog GreatDane" htmlFor="GreatDane" />
               </div>
               <input type="Submit" value="Vote" readOnly="true" disabled={this.state.voteDisabled} />
