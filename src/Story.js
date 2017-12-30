@@ -190,7 +190,6 @@ class Story extends Component {
         </form>
         {this.state.latestStory != null && this.state.latestStory.votes != null &&
           <div>
-            <br /><br />
             <table style={{ margin: '0px auto' }}>
               <thead>
                 <tr>
