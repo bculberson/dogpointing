@@ -107,7 +107,7 @@ class Story extends Component {
 
     const cSR = new Request(`https://api.dogpointing.com/session/${this.props.sessionKey}/story`, cSI);
     fetch(cSR, cSI).then(resp => resp.json()).then((data) => {
-      if (parseInt(data.story_key, 10) >= parseInt(this.state.latestStory.story_key, 10)) {
+      if (this.state.latestStory == null || parseInt(data.story_key, 10) >= parseInt(this.state.latestStory.story_key, 10)) {
         this.setState({
           latestStory: data,
           voteValue: '',
