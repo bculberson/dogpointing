@@ -19,8 +19,6 @@ def lambda_handler(event, context):
         'key': key,
         'expiration': int(expiration),
         }
-    
+
     table.put_item(Item=item)
-    
-    response = table.get_item(Key={'key': key})
-    return response['Item']
+    return item

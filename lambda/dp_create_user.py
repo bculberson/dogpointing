@@ -27,5 +27,4 @@ def lambda_handler(event, context):
         }
 
     table.put_item(Item=item)
-    user_response = table.get_item(Key={'user_key': user_key, 'session_key': session_key})
-    return user_response['Item']
+    return item

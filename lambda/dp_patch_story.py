@@ -13,7 +13,6 @@ logger.setLevel(logging.INFO)
 dynamodb = boto3.resource("dynamodb", region_name='us-east-2', endpoint_url="http://dynamodb.us-east-2.amazonaws.com")
 table = dynamodb.Table('dp_stories')
 user_table = dynamodb.Table('dp_users')
-iot_client = boto3.client('iot-data', region_name='us-east-2')
 
 
 def vote_to_point(vote):
@@ -85,7 +84,7 @@ def lambda_handler(event, context):
 
     # save votes
     try:
-      response = table.update_item(
+      table.update_item(
         Key={'story_key': str(story_key), 'session_key': session_key},
         UpdateExpression="set votes = :votes, expiration = :expiration, complete = :complete",
         ConditionExpression='complete = :exp_complete and expiration = :exp_expiration',
@@ -96,14 +95,12 @@ def lambda_handler(event, context):
           ':exp_expiration': old_expiration,
           ':exp_complete': False,
         },
-        ReturnValues="UPDATED_NEW"
+        ReturnValues="NONE"
       )
     except botocore.exceptions.ClientError as e:
       raise Exception("Error updating dynamo")
 
-    response = table.get_item(Key={'story_key': story_key, 'session_key': session_key})
-    # publish story
-    item={
+    return {
         'story_key': str(story_key),
         'session_key': session_key,
         'expiration': int(expiration),
@@ -111,9 +108,3 @@ def lambda_handler(event, context):
         'votes': response['Item']['votes'],
         'complete': complete,
         }
-    topic = "dp/%s" % str(session_key)
-    iot_client.publish(
-            topic=topic,
-            qos=1,
-            payload=json.dumps(item))
-    return response["Item"]

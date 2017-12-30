@@ -13,7 +13,6 @@ dynamodb = boto3.resource("dynamodb", region_name='us-east-2', endpoint_url="htt
 story_table = dynamodb.Table('dp_stories')
 session_table = dynamodb.Table('dp_sessions')
 user_table = dynamodb.Table('dp_users')
-iot_client = boto3.client('iot-data', region_name='us-east-2')
 
 
 def get_user_info(session_key):
@@ -48,12 +47,4 @@ def lambda_handler(event, context):
         }
 
     story_table.put_item(Item=item)
-
-    response = story_table.get_item(Key={'story_key': story_key, 'session_key': session_key})
-    # publish story
-    topic = "dp/%s" % str(session_key)
-    iot_client.publish(
-            topic=topic,
-            qos=1,
-            payload=json.dumps(item))
-    return response['Item']
+    return item

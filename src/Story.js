@@ -157,12 +157,13 @@ class Story extends Component {
 
   showVoteValue(vote) {
     if (this.state.latestStory.complete) {
+      if (vote.value !== 'Cat') {
+        return vote.value;
+      }
+      return '';
+    } else if (this.props.userKey === vote.key && vote.value !== 'Cat') {
       return vote.value;
-    }
-    if (this.props.userKey === vote.key && vote.value !== 'Cat') {
-      return vote.value;
-    }
-    if (vote.value !== 'Cat') {
+    } else if (vote.value !== 'Cat') {
       return 'voted';
     }
     return 'voting...';

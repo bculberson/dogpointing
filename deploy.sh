@@ -18,6 +18,7 @@ declare -a arr=("dp_create_session"
                 "dp_get_stories"
                 "dp_get_users"
                 "dp_patch_story"
+                "dp_notify_clients"
                 )
 
 for i in "${arr[@]}"
